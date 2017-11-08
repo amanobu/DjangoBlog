@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*- 
 from django.db import models
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 
 
 class Post(models.Model):
+    #アカウントとのリレーション
     author = models.ForeignKey('auth.User')
     title = models.CharField(max_length=200)
     text = models.TextField()
@@ -11,13 +13,16 @@ class Post(models.Model):
     published_date = models.DateTimeField(blank=True, null=True)
 
     def publish(self):
+        #公開時は、自分のtimezoneの現在日付でstoreする
         self.published_date = timezone.now()
         self.save()
 
     def approve_comments(self):
+        #このPOSTに関連する許可済みのコメントを取得する(はず)。それがapproved_comment=Trueのはず
         return self.comments.filter(approved_comment=True)
 
     def get_absolute_url(self):
+        #django.conf.urls.urlによって登録？されたname='*****'のURLを取得する
         return reverse("post_detail",kwargs={'pk':self.pk})
 
 
@@ -27,6 +32,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    #Postとのリレーション
     post = models.ForeignKey('blog.Post', related_name='comments')
     author = models.CharField(max_length=200)
     text = models.TextField()

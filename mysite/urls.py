@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('blog.urls')),
     url(r'^accounts/login/$', views.login, name='login'),
+    #kwargsはviews.logoutに'next_page': '/'を引数に追加して呼び出す
     url(r'^accounts/logout/$', views.logout, name='logout', kwargs={'next_page': '/'}),
 ]
